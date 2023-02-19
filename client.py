@@ -17,7 +17,10 @@ class ClientInfo:
     @property
     def league_pid(self) -> int:
         pids = self.__get_pids()
-        return list(pids.keys())[list(pids.values()).index("LeagueClientUx.exe")]
+        try:
+            return list(pids.keys())[list(pids.values()).index("LeagueClientUx.exe")]
+        except ValueError:
+            raise ClientInfoError("No se encuentra el cliente de LOL", code=-1)
     
     @property
     def commandline(self):
@@ -75,7 +78,9 @@ class ClientInfo:
         """
 
 class ClientInfoError(Exception):
-    pass
+    def __init__(self, *args, code="", **kwargs):
+        self.code = code
+        super().__init__(args, kwargs)
 
 if __name__=="__main__":
     info = ClientInfo()

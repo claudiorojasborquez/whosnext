@@ -59,7 +59,18 @@ class API:
             print("no fue posible conseguir informacion de compañeros[clasificatoria]")
             return ""
 
-    def query_opgg(self):
+    def search_web(self, site):
+        if site is None:
+            return
+        
         players_string = self.get_ranked_players()
-        url = "https://las.op.gg/multi/query=" + players_string
+        if site=="opgg":
+            url = "https://las.op.gg/multi/query=" + players_string
+        elif site=="ugg":
+            url =  "https://u.gg/multisearch?summoners=" + players_string + "&region=las"
+        elif site=="porogg":
+            url = "https://poro.gg/multi?region=las&q=" + players_string
+        elif site=="porofessor":
+            url = "https://porofessor.gg/pregame/las/" + players_string  
         webbrowser.open(url)
+
