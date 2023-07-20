@@ -74,3 +74,29 @@ class API:
             url = "https://porofessor.gg/pregame/las/" + players_string  
         webbrowser.open(url)
 
+
+    def get_challenges_list(self):
+        url = endpoint("challenges_data", self.league_info.port)
+        headers = make_league_headers(self.league_info)
+        try:
+            data = Connection.request(url, headers).decode("utf-8")
+            load = json.loads(data)
+            return load
+        except Exception as e:
+            logging.error(f"while retrieving challenges list:\n{e.msg}")
+            print("no fue posible conseguir informacion de los desafios")
+            return ""
+
+    def remove_challenges(self, prefs):
+        if prefs is None:
+            prefs = {"challengeIds": []} 
+        mapi = self.API()
+        url = f"https://127.0.0.1:{mapi.league_info.port}/lol-challenges/v1/update-player-preferences/"
+        headers = make_league_headers(mapi.league_info)
+        prefs_ = json.dumps(prefs).encode()
+        if Connection.request(url=url, headers=headers, method="POST", data=prefs_):
+            return "happy happy happy"
+        else:
+            return "me quiero morir"
+
+

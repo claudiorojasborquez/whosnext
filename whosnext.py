@@ -3,6 +3,7 @@ from connection import Connection, make_league_headers, endpoint
 from util import formated
 from api import *
 import PySimpleGUI as gui
+import win32gui, win32con
 
 gui.theme("dark purple")
 gui.set_options(element_padding=(5,5))
@@ -32,6 +33,8 @@ margins = (15, 15)
 search_options=["opgg", "ugg", "porofessor", "poro"]
 
 if __name__ == "__main__":
+    hide = win32gui.GetForegroundWindow()
+    win32gui.ShowWindow(hide, win32con.SW_HIDE)
     req = API()
     window = gui.Window(title=title, layout=layout, margins=margins, icon=icon)
     while True:

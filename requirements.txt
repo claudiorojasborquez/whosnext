@@ -1,2 +1,3 @@
 pysimplegui
 psutil
+pywin32

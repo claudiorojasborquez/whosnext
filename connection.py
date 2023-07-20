@@ -49,21 +49,28 @@ __ENDPOINTS = {
     "champion_select" : "https://127.0.0.1/lol-champ-select/v1/session",
     "player": "https://127.0.0.1/lol-summoner/v1/summoners/",
     "ranked_select" : "https://127.0.0.1/chat/v5/participants/champ-select",
+    "challenges_data": "https://127.0.0.1/lol-challenges/v1/summary-player-data/local-player",
+    "remove_challenges": "https://127.0.0.1/lol-challenges/v1/update-player-preferences/"
 }
 
 def endpoint(select, port, player_id=None):
     endpoint_ = __ENDPOINTS[select][:17] + ":" + str(port) + __ENDPOINTS[select][17:]
-    if select =="player":
+    if select == "player":
         endpoint_ += str(player_id)
     return endpoint_
 
 class Connection:
     @staticmethod
-    def request(url, headers):
+    def request(url, headers, method="GET", data=""):
         context = ssl.SSLContext() #https zzz
-        url_ = urllib.request.Request(url=url, headers=headers, method="GET")
+        req = urllib.request.Request(url=url, headers=headers, method=method, data=data)
         try:
-            with urllib.request.urlopen(url_, context=context) as fd:
-                return fd.read()
+            with urllib.request.urlopen(req, context=context) as response:
+                if response.status == 200:
+                    return response.read()
+                elif response.status == 204:
+                    return True
+                else:
+                    return None
         except Exception as e:
             return f"Error when requesting resource:\n\tError: {e.msg}"
